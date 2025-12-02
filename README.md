@@ -1,0 +1,108 @@
+# Mullvad VPN 节点速度测试工具
+
+这是一个使用 **Mullvad CLI** 测试所有 VPN 节点延迟的工具，能够生成美观的 HTML 报告。
+
+## 功能特点
+
+- ✅ **使用 Mullvad CLI** 获取所有 VPN 服务器节点
+- ✅ 测试每个节点的 ping 延迟
+- ✅ 支持国家筛选（按国家名称或代码筛选）
+- ✅ 生成美观的 HTML 报告，支持排序
+- ✅ 显示统计信息（可用节点数、总节点数等）
+- ✅ 彩色延迟显示（绿色=优秀，橙色=一般，红色=较慢）
+- ✅ 基于官方 Mullvad 工具，数据准确可靠
+- ✅ 延迟显示精确整数值（0ms, 1ms, 200ms等）
+
+## 使用方法
+
+### 基本使用
+
+```bash
+# 测试所有节点
+node mullvad-speed-test.js
+
+# 筛选特定国家的节点
+node mullvad-speed-test.js --country japan
+node mullvad-speed-test.js --country usa
+node mullvad-speed-test.js --country germany
+```
+
+### 参数说明
+
+- `阈值`：延迟阈值（毫秒），可选，默认为 200ms
+- 脚本会自动测试所有节点，生成 HTML 报告文件
+
+## 输出结果
+
+脚本运行后会：
+
+1. 显示测试进度（百分比）
+2. 生成 HTML 报告文件，固定文件名：`mullvad-speed-test.html`
+3. 在控制台显示最快的 10 个节点
+
+## HTML 报告功能
+
+- 📊 统计面板：显示可用节点数量
+- 📋 排序表格：默认按延迟从小到大排序
+- 🎨 彩色延迟显示：
+  - 🟢 绿色：≤ 阈值（优秀）
+  - 🟠 橙色：≤ 阈值×1.5（一般）
+  - 🔴 红色：> 阈值×1.5（较慢）
+  - ⚪ 灰色：无法连接
+- 🔄 交互式排序：点击按钮可按延迟、国家或城市排序
+- 📱 响应式设计，支持移动端查看
+
+## 示例输出
+
+```
+开始获取Mullvad服务器列表...
+测试阈值: 200ms
+找到 696 个服务器
+开始测试延迟...
+
+已测试: 673/696 (97%)
+生成HTML报告...
+报告已生成: mullvad-speed-test.html
+在浏览器中打开 mullvad-speed-test.html 查看结果
+
+最快的10个节点:
+1. au-syd-wg-304 (Australia) - 0ms
+2. br-sao-wg-303 (Brazil) - 0ms
+3. jp-tyo-wg-002 (Japan) - 0ms
+...
+
+# 筛选特定国家的节点
+node mullvad-speed-test.js --country japan
+
+开始获取Mullvad服务器列表...
+筛选国家: japan
+找到 9 个服务器
+最快的节点:
+1. jp-osa-wg-003 (Japan) - 0ms
+2. jp-tyo-wg-202 (Japan) - 0ms
+...
+```
+
+## 系统要求
+
+- Linux 或 Unix 系统
+- Node.js（已预装）
+- **Mullvad CLI**（必须安装并登录）
+- ping 命令（系统自带）
+
+## 注意事项
+
+- 测试过程可能需要几分钟时间，取决于网络状况
+- 脚本使用 ping 命令测试延迟，实际 VPN 连接速度可能有所不同
+- HTML 报告可以在任何现代浏览器中打开查看
+
+## 故障排除
+
+如果遇到网络连接问题，请检查：
+1. 网络连接是否正常
+2. 是否可以访问 Mullvad API
+3. ping 命令是否可用
+
+## 许可证
+
+本工具仅用于测试目的，请遵守 Mullvad 的使用条款。
