@@ -65,24 +65,48 @@ function parseMullvadRelayList(output) {
     return servers;
 }
 
+// 检测操作系统类型
+function getOS() {
+    const platform = process.platform;
+    if (platform === 'darwin') return 'macos';
+    if (platform === 'linux') return 'linux';
+    return 'unknown';
+}
+
 // 测试服务器延迟
 function testLatency(ip, timeout = 10000) {
     try {
-        // 使用ping命令测试延迟，设置10秒超时
-        const pingCommand = `ping -c 1 -W 10 ${ip}`;
+        const os = getOS();
+        let pingCommand;
+        
+        // macOS和Linux的ping命令参数不同
+        if (os === 'macos') {
+            // macOS: -W参数单位是毫秒，10秒 = 10000毫秒
+            pingCommand = `ping -c 1 -W 10000 ${ip}`;
+        } else {
+            // Linux: -W参数单位是秒
+            pingCommand = `ping -c 1 -W 10 ${ip}`;
+        }
+        
         const output = execSync(pingCommand, { timeout: timeout, encoding: 'utf8' });
 
         // 解析ping输出中的延迟时间
-        // 查找类似 "time=12.3 ms" 的模式
+        // 1. 查找类似 "time=12.3 ms" 的模式（Linux某些版本）
         const timeMatch = output.match(/time=([\d.]+)\s*ms/);
         if (timeMatch) {
             return parseFloat(timeMatch[1]);
         }
 
-        // 如果没有找到time=，尝试从rtt统计中提取
+        // 2. 查找Linux的rtt统计格式: "rtt min/avg/max/mdev = ..."
         const rttMatch = output.match(/rtt min\/avg\/max\/mdev = ([\d.]+)\/([\d.]+)\/([\d.]+)\/([\d.]+) ms/);
         if (rttMatch) {
             return parseFloat(rttMatch[2]); // 使用平均值
+        }
+
+        // 3. 查找macOS的round-trip统计格式: "round-trip min/avg/max/stddev = ..."
+        const roundTripMatch = output.match(/round-trip min\/avg\/max\/stddev = ([\d.]+)\/([\d.]+)\/([\d.]+)\/([\d.]+) ms/);
+        if (roundTripMatch) {
+            return parseFloat(roundTripMatch[2]); // 使用平均值
         }
 
         return null;
