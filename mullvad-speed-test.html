@@ -1,0 +1,1978 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mullvad VPN 节点速度测试报告</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 5px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #34495e;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e8f4f8;
+        }
+        .latency {
+            font-weight: bold;
+        }
+        .latency.good {
+            color: #27ae60;
+        }
+        .latency.medium {
+            color: #f39c12;
+        }
+        .latency.bad {
+            color: #e74c3c;
+        }
+        .latency.unknown {
+            color: #95a5a6;
+        }
+        .country {
+            font-weight: 500;
+        }
+        .city {
+            color: #7f8c8d;
+        }
+        .timestamp {
+            text-align: center;
+            color: #7f8c8d;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .threshold-info {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mullvad VPN 节点速度测试报告</h1>
+
+        <div class="threshold-info">
+            10秒超时测试 | 显示所有节点 | 筛选国家: usa | 测试时间: 2025/12/3 23:12:06
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">221</div>
+                <div class="stat-label">可达节点</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">0</div>
+                <div class="stat-label">超时节点</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">221</div>
+                <div class="stat-label">总节点数</div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <button onclick="sortTable('latency')" style="padding: 8px 16px; margin-right: 10px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">按延迟排序</button>
+            <button onclick="sortTable('country')" style="padding: 8px 16px; margin-right: 10px; background: #2ecc71; color: white; border: none; border-radius: 4px; cursor: pointer;">按国家排序</button>
+            <button onclick="sortTable('city')" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">按城市排序</button>
+        </div>
+
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>国家</th>
+                    <th>城市</th>
+                    <th>服务器</th>
+                    <th data-sort="latency">延迟 (ms)</th>
+                    <th>IP地址</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-402</td>
+                            <td class="latency medium">242ms</td>
+                            <td>23.234.80.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-405</td>
+                            <td class="latency medium">244ms</td>
+                            <td>23.234.82.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-408</td>
+                            <td class="latency medium">247ms</td>
+                            <td>146.70.172.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-406</td>
+                            <td class="latency medium">247ms</td>
+                            <td>23.234.82.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-402</td>
+                            <td class="latency medium">252ms</td>
+                            <td>146.70.173.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-403</td>
+                            <td class="latency medium">252ms</td>
+                            <td>23.234.81.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-102</td>
+                            <td class="latency medium">254ms</td>
+                            <td>198.44.129.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-507</td>
+                            <td class="latency medium">255ms</td>
+                            <td>23.234.95.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-404</td>
+                            <td class="latency medium">256ms</td>
+                            <td>146.70.173.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-403</td>
+                            <td class="latency medium">256ms</td>
+                            <td>146.70.173.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-406</td>
+                            <td class="latency medium">257ms</td>
+                            <td>146.70.174.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-703</td>
+                            <td class="latency medium">258ms</td>
+                            <td>103.251.27.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-405</td>
+                            <td class="latency medium">259ms</td>
+                            <td>146.70.172.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-407</td>
+                            <td class="latency medium">260ms</td>
+                            <td>146.70.172.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-ovpn-102</td>
+                            <td class="latency medium">260ms</td>
+                            <td>198.44.129.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-ovpn-101</td>
+                            <td class="latency medium">262ms</td>
+                            <td>198.44.129.162</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-702</td>
+                            <td class="latency medium">263ms</td>
+                            <td>103.251.26.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-504</td>
+                            <td class="latency medium">263ms</td>
+                            <td>23.234.93.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Phoenix, AZ</td>
+                            <td>us-phx-wg-202</td>
+                            <td class="latency medium">265ms</td>
+                            <td>23.234.88.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-ovpn-002</td>
+                            <td class="latency medium">265ms</td>
+                            <td>198.54.134.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Phoenix, AZ</td>
+                            <td>us-phx-wg-201</td>
+                            <td class="latency medium">267ms</td>
+                            <td>23.234.88.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Phoenix, AZ</td>
+                            <td>us-phx-wg-203</td>
+                            <td class="latency medium">269ms</td>
+                            <td>23.234.89.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Phoenix, AZ</td>
+                            <td>us-phx-wg-207</td>
+                            <td class="latency medium">270ms</td>
+                            <td>23.234.91.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-ovpn-001</td>
+                            <td class="latency medium">270ms</td>
+                            <td>198.54.134.34</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-704</td>
+                            <td class="latency medium">271ms</td>
+                            <td>103.251.27.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-204</td>
+                            <td class="latency medium">272ms</td>
+                            <td>69.4.234.10</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Phoenix, AZ</td>
+                            <td>us-phx-wg-208</td>
+                            <td class="latency medium">275ms</td>
+                            <td>23.234.91.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-101</td>
+                            <td class="latency medium">275ms</td>
+                            <td>198.44.129.98</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-701</td>
+                            <td class="latency medium">276ms</td>
+                            <td>103.251.26.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-103</td>
+                            <td class="latency medium">277ms</td>
+                            <td>198.44.129.34</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Phoenix, AZ</td>
+                            <td>us-phx-wg-206</td>
+                            <td class="latency medium">278ms</td>
+                            <td>23.234.90.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-202</td>
+                            <td class="latency medium">278ms</td>
+                            <td>69.4.234.149</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-305</td>
+                            <td class="latency medium">281ms</td>
+                            <td>23.234.114.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-ovpn-101</td>
+                            <td class="latency medium">284ms</td>
+                            <td>198.54.131.34</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-408</td>
+                            <td class="latency medium">284ms</td>
+                            <td>23.234.83.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-201</td>
+                            <td class="latency medium">284ms</td>
+                            <td>23.234.68.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-ovpn-102</td>
+                            <td class="latency medium">284ms</td>
+                            <td>198.54.131.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-303</td>
+                            <td class="latency medium">284ms</td>
+                            <td>142.147.89.225</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-203</td>
+                            <td class="latency medium">285ms</td>
+                            <td>69.4.234.131</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-601</td>
+                            <td class="latency medium">285ms</td>
+                            <td>103.102.246.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-102</td>
+                            <td class="latency medium">285ms</td>
+                            <td>37.19.210.14</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-506</td>
+                            <td class="latency medium">285ms</td>
+                            <td>23.234.94.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-103</td>
+                            <td class="latency medium">288ms</td>
+                            <td>37.19.210.27</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-206</td>
+                            <td class="latency medium">288ms</td>
+                            <td>23.234.70.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Phoenix, AZ</td>
+                            <td>us-phx-wg-205</td>
+                            <td class="latency medium">290ms</td>
+                            <td>23.234.90.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-001</td>
+                            <td class="latency medium">291ms</td>
+                            <td>23.234.116.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-005</td>
+                            <td class="latency medium">294ms</td>
+                            <td>23.234.118.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-202</td>
+                            <td class="latency medium">294ms</td>
+                            <td>23.234.68.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-ovpn-002</td>
+                            <td class="latency medium">294ms</td>
+                            <td>146.70.177.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-307</td>
+                            <td class="latency medium">295ms</td>
+                            <td>68.235.46.188</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-004</td>
+                            <td class="latency medium">295ms</td>
+                            <td>23.234.117.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-002</td>
+                            <td class="latency medium">295ms</td>
+                            <td>23.234.116.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-007</td>
+                            <td class="latency medium">298ms</td>
+                            <td>23.234.119.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-ovpn-001</td>
+                            <td class="latency medium">299ms</td>
+                            <td>146.70.211.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-006</td>
+                            <td class="latency medium">299ms</td>
+                            <td>23.234.118.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-003</td>
+                            <td class="latency medium">300ms</td>
+                            <td>23.234.117.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-103</td>
+                            <td class="latency medium">302ms</td>
+                            <td>155.2.191.103</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-401</td>
+                            <td class="latency medium">302ms</td>
+                            <td>23.234.80.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-602</td>
+                            <td class="latency medium">302ms</td>
+                            <td>103.102.246.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-104</td>
+                            <td class="latency medium">303ms</td>
+                            <td>155.2.191.153</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-008</td>
+                            <td class="latency medium">303ms</td>
+                            <td>23.234.119.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">McAllen, TX</td>
+                            <td>us-txc-wg-001</td>
+                            <td class="latency medium">303ms</td>
+                            <td>79.127.222.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-407</td>
+                            <td class="latency medium">305ms</td>
+                            <td>23.234.111.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-305</td>
+                            <td class="latency medium">305ms</td>
+                            <td>68.235.46.126</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-505</td>
+                            <td class="latency medium">306ms</td>
+                            <td>23.234.94.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-406</td>
+                            <td class="latency medium">306ms</td>
+                            <td>23.234.110.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-408</td>
+                            <td class="latency medium">306ms</td>
+                            <td>23.234.111.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">McAllen, TX</td>
+                            <td>us-txc-wg-002</td>
+                            <td class="latency medium">306ms</td>
+                            <td>79.127.222.207</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-803</td>
+                            <td class="latency medium">306ms</td>
+                            <td>23.234.101.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Phoenix, AZ</td>
+                            <td>us-phx-wg-204</td>
+                            <td class="latency medium">307ms</td>
+                            <td>23.234.89.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-105</td>
+                            <td class="latency medium">307ms</td>
+                            <td>155.2.191.203</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-801</td>
+                            <td class="latency medium">308ms</td>
+                            <td>23.234.100.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-102</td>
+                            <td class="latency medium">308ms</td>
+                            <td>155.2.191.53</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-502</td>
+                            <td class="latency medium">308ms</td>
+                            <td>206.217.206.47</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-804</td>
+                            <td class="latency medium">309ms</td>
+                            <td>23.234.101.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-ovpn-201</td>
+                            <td class="latency medium">310ms</td>
+                            <td>69.4.234.150</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-305</td>
+                            <td class="latency medium">310ms</td>
+                            <td>67.213.209.120</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-808</td>
+                            <td class="latency medium">310ms</td>
+                            <td>23.234.103.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Houston, TX</td>
+                            <td>us-hou-wg-004</td>
+                            <td class="latency medium">310ms</td>
+                            <td>37.19.221.169</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Kansas City, MO</td>
+                            <td>us-mkc-wg-101</td>
+                            <td class="latency medium">312ms</td>
+                            <td>155.2.191.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-508</td>
+                            <td class="latency medium">313ms</td>
+                            <td>23.234.95.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-001</td>
+                            <td class="latency medium">313ms</td>
+                            <td>198.54.135.34</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-002</td>
+                            <td class="latency medium">313ms</td>
+                            <td>198.54.135.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-403</td>
+                            <td class="latency medium">314ms</td>
+                            <td>23.234.109.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-701</td>
+                            <td class="latency medium">316ms</td>
+                            <td>23.162.8.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-805</td>
+                            <td class="latency medium">316ms</td>
+                            <td>23.234.102.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-702</td>
+                            <td class="latency medium">317ms</td>
+                            <td>23.162.8.67</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-405</td>
+                            <td class="latency medium">317ms</td>
+                            <td>23.234.110.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-ovpn-002</td>
+                            <td class="latency medium">318ms</td>
+                            <td>198.54.135.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-302</td>
+                            <td class="latency medium">318ms</td>
+                            <td>142.147.89.210</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-802</td>
+                            <td class="latency medium">318ms</td>
+                            <td>23.234.100.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-503</td>
+                            <td class="latency medium">319ms</td>
+                            <td>146.70.165.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-507</td>
+                            <td class="latency medium">321ms</td>
+                            <td>206.217.206.16</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-806</td>
+                            <td class="latency medium">322ms</td>
+                            <td>23.234.102.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Raleigh, NC</td>
+                            <td>us-rag-wg-206</td>
+                            <td class="latency medium">322ms</td>
+                            <td>23.234.78.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Raleigh, NC</td>
+                            <td>us-rag-wg-207</td>
+                            <td class="latency medium">323ms</td>
+                            <td>23.234.79.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-402</td>
+                            <td class="latency medium">323ms</td>
+                            <td>37.19.200.143</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-603</td>
+                            <td class="latency medium">324ms</td>
+                            <td>146.70.168.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-703</td>
+                            <td class="latency medium">324ms</td>
+                            <td>23.162.8.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-602</td>
+                            <td class="latency medium">324ms</td>
+                            <td>146.70.168.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-304</td>
+                            <td class="latency medium">324ms</td>
+                            <td>67.213.209.119</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-ovpn-501</td>
+                            <td class="latency medium">325ms</td>
+                            <td>146.70.168.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-505</td>
+                            <td class="latency medium">326ms</td>
+                            <td>146.70.166.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-605</td>
+                            <td class="latency medium">326ms</td>
+                            <td>146.70.171.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-603</td>
+                            <td class="latency medium">327ms</td>
+                            <td>23.159.216.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-504</td>
+                            <td class="latency medium">328ms</td>
+                            <td>146.70.166.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Washington DC</td>
+                            <td>us-was-wg-002</td>
+                            <td class="latency medium">328ms</td>
+                            <td>185.213.193.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Miami, FL</td>
+                            <td>us-mia-wg-103</td>
+                            <td class="latency medium">330ms</td>
+                            <td>146.70.187.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-203</td>
+                            <td class="latency medium">331ms</td>
+                            <td>169.150.203.28</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-203</td>
+                            <td class="latency medium">331ms</td>
+                            <td>87.249.134.27</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Raleigh, NC</td>
+                            <td>us-rag-wg-202</td>
+                            <td class="latency medium">332ms</td>
+                            <td>23.234.76.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-ovpn-503</td>
+                            <td class="latency medium">332ms</td>
+                            <td>146.70.166.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-606</td>
+                            <td class="latency medium">332ms</td>
+                            <td>146.70.168.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-ovpn-001</td>
+                            <td class="latency medium">335ms</td>
+                            <td>198.54.135.162</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-502</td>
+                            <td class="latency medium">336ms</td>
+                            <td>146.70.165.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-608</td>
+                            <td class="latency medium">336ms</td>
+                            <td>23.168.216.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-ovpn-602</td>
+                            <td class="latency medium">336ms</td>
+                            <td>146.70.185.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-602</td>
+                            <td class="latency medium">336ms</td>
+                            <td>23.162.40.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-ovpn-603</td>
+                            <td class="latency medium">337ms</td>
+                            <td>146.70.185.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-601</td>
+                            <td class="latency medium">337ms</td>
+                            <td>23.162.40.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-ovpn-202</td>
+                            <td class="latency medium">338ms</td>
+                            <td>169.150.203.54</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-301</td>
+                            <td class="latency medium">339ms</td>
+                            <td>68.235.46.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-606</td>
+                            <td class="latency medium">340ms</td>
+                            <td>23.160.24.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-ovpn-201</td>
+                            <td class="latency medium">340ms</td>
+                            <td>169.150.203.41</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Miami, FL</td>
+                            <td>us-mia-wg-002</td>
+                            <td class="latency medium">341ms</td>
+                            <td>45.134.142.206</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-607</td>
+                            <td class="latency medium">341ms</td>
+                            <td>23.168.216.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-506</td>
+                            <td class="latency medium">341ms</td>
+                            <td>146.70.165.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-ovpn-601</td>
+                            <td class="latency medium">342ms</td>
+                            <td>146.70.171.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-302</td>
+                            <td class="latency medium">342ms</td>
+                            <td>143.244.47.78</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-401</td>
+                            <td class="latency medium">345ms</td>
+                            <td>37.19.200.156</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-604</td>
+                            <td class="latency medium">347ms</td>
+                            <td>23.159.216.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-303</td>
+                            <td class="latency medium">347ms</td>
+                            <td>143.244.47.91</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-202</td>
+                            <td class="latency medium">350ms</td>
+                            <td>169.150.203.15</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-506</td>
+                            <td class="latency medium">351ms</td>
+                            <td>206.217.206.4</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-201</td>
+                            <td class="latency medium">352ms</td>
+                            <td>169.150.203.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Miami, FL</td>
+                            <td>us-mia-wg-001</td>
+                            <td class="latency medium">352ms</td>
+                            <td>45.134.142.219</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-501</td>
+                            <td class="latency medium">353ms</td>
+                            <td>146.70.165.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-301</td>
+                            <td class="latency medium">355ms</td>
+                            <td>143.244.47.65</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Miami, FL</td>
+                            <td>us-mia-ovpn-101</td>
+                            <td class="latency medium">356ms</td>
+                            <td>146.70.187.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-404</td>
+                            <td class="latency medium">357ms</td>
+                            <td>23.234.81.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-404</td>
+                            <td class="latency medium">358ms</td>
+                            <td>23.234.109.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-001</td>
+                            <td class="latency medium">361ms</td>
+                            <td>146.70.211.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-409</td>
+                            <td class="latency medium">362ms</td>
+                            <td>146.70.172.194</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-407</td>
+                            <td class="latency medium">362ms</td>
+                            <td>23.234.83.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-503</td>
+                            <td class="latency medium">362ms</td>
+                            <td>206.217.206.67</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-306</td>
+                            <td class="latency medium">365ms</td>
+                            <td>68.235.46.157</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Boston, MA</td>
+                            <td>us-bos-wg-101</td>
+                            <td class="latency medium">366ms</td>
+                            <td>149.40.50.98</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-603</td>
+                            <td class="latency medium">367ms</td>
+                            <td>103.102.247.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-003</td>
+                            <td class="latency medium">371ms</td>
+                            <td>138.199.43.65</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-203</td>
+                            <td class="latency medium">371ms</td>
+                            <td>23.234.69.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-308</td>
+                            <td class="latency medium">379ms</td>
+                            <td>68.235.46.209</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-601</td>
+                            <td class="latency medium">382ms</td>
+                            <td>146.70.185.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-207</td>
+                            <td class="latency medium">382ms</td>
+                            <td>23.234.71.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-204</td>
+                            <td class="latency medium">384ms</td>
+                            <td>103.81.231.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-ovpn-002</td>
+                            <td class="latency medium">384ms</td>
+                            <td>45.134.140.169</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Los Angeles, CA</td>
+                            <td>us-lax-wg-605</td>
+                            <td class="latency medium">384ms</td>
+                            <td>23.160.24.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-402</td>
+                            <td class="latency medium">385ms</td>
+                            <td>79.127.217.47</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-ovpn-102</td>
+                            <td class="latency medium">385ms</td>
+                            <td>185.156.46.182</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-503</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.93.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-004</td>
+                            <td class="latency medium">386ms</td>
+                            <td>198.54.135.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-402</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.108.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-403</td>
+                            <td class="latency medium">386ms</td>
+                            <td>37.19.200.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-103</td>
+                            <td class="latency medium">386ms</td>
+                            <td>185.156.46.156</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-304</td>
+                            <td class="latency medium">386ms</td>
+                            <td>68.235.46.95</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-201</td>
+                            <td class="latency medium">386ms</td>
+                            <td>69.4.234.9</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-201</td>
+                            <td class="latency medium">386ms</td>
+                            <td>87.249.134.1</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-502</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.92.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Houston, TX</td>
+                            <td>us-hou-wg-003</td>
+                            <td class="latency medium">386ms</td>
+                            <td>37.19.221.156</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-201</td>
+                            <td class="latency medium">386ms</td>
+                            <td>103.81.230.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Raleigh, NC</td>
+                            <td>us-rag-wg-204</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.77.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-604</td>
+                            <td class="latency medium">386ms</td>
+                            <td>103.102.247.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-303</td>
+                            <td class="latency medium">386ms</td>
+                            <td>67.213.209.118</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Houston, TX</td>
+                            <td>us-hou-wg-001</td>
+                            <td class="latency medium">386ms</td>
+                            <td>37.19.221.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-308</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.115.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Secaucus, NJ</td>
+                            <td>us-uyk-wg-202</td>
+                            <td class="latency medium">386ms</td>
+                            <td>104.36.50.33</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-002</td>
+                            <td class="latency medium">386ms</td>
+                            <td>45.134.140.143</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-101</td>
+                            <td class="latency medium">386ms</td>
+                            <td>37.19.210.1</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-101</td>
+                            <td class="latency medium">386ms</td>
+                            <td>185.156.46.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-204</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.69.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-303</td>
+                            <td class="latency medium">386ms</td>
+                            <td>68.235.46.64</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-401</td>
+                            <td class="latency medium">386ms</td>
+                            <td>79.127.217.34</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-205</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.70.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-307</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.115.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Denver, CO</td>
+                            <td>us-den-wg-208</td>
+                            <td class="latency medium">386ms</td>
+                            <td>23.234.71.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Raleigh, NC</td>
+                            <td>us-rag-wg-205</td>
+                            <td class="latency medium">387ms</td>
+                            <td>23.234.78.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Secaucus, NJ</td>
+                            <td>us-uyk-wg-201</td>
+                            <td class="latency medium">387ms</td>
+                            <td>104.36.50.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-401</td>
+                            <td class="latency medium">387ms</td>
+                            <td>23.234.108.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-301</td>
+                            <td class="latency medium">387ms</td>
+                            <td>67.213.209.116</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-001</td>
+                            <td class="latency medium">387ms</td>
+                            <td>138.199.43.91</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Houston, TX</td>
+                            <td>us-hou-wg-002</td>
+                            <td class="latency medium">387ms</td>
+                            <td>37.19.221.143</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-ovpn-001</td>
+                            <td class="latency medium">387ms</td>
+                            <td>45.134.140.156</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-504</td>
+                            <td class="latency medium">387ms</td>
+                            <td>206.217.206.87</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Miami, FL</td>
+                            <td>us-mia-wg-101</td>
+                            <td class="latency medium">387ms</td>
+                            <td>146.70.187.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Chicago, IL</td>
+                            <td>us-chi-wg-302</td>
+                            <td class="latency medium">387ms</td>
+                            <td>68.235.46.33</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-505</td>
+                            <td class="latency medium">387ms</td>
+                            <td>206.217.206.107</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Miami, FL</td>
+                            <td>us-mia-wg-102</td>
+                            <td class="latency medium">387ms</td>
+                            <td>146.70.187.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Miami, FL</td>
+                            <td>us-mia-ovpn-102</td>
+                            <td class="latency medium">387ms</td>
+                            <td>146.70.183.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-302</td>
+                            <td class="latency medium">387ms</td>
+                            <td>67.213.209.117</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-001</td>
+                            <td class="latency medium">387ms</td>
+                            <td>45.134.140.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-002</td>
+                            <td class="latency medium">387ms</td>
+                            <td>146.70.211.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-102</td>
+                            <td class="latency medium">388ms</td>
+                            <td>185.156.46.143</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-302</td>
+                            <td class="latency medium">388ms</td>
+                            <td>23.234.112.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">San Jose, CA</td>
+                            <td>us-sjc-wg-501</td>
+                            <td class="latency medium">388ms</td>
+                            <td>23.234.92.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Dallas, TX</td>
+                            <td>us-dal-wg-003</td>
+                            <td class="latency medium">388ms</td>
+                            <td>146.70.211.130</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-203</td>
+                            <td class="latency medium">389ms</td>
+                            <td>103.81.231.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-ovpn-202</td>
+                            <td class="latency medium">391ms</td>
+                            <td>69.4.234.151</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-306</td>
+                            <td class="latency medium">391ms</td>
+                            <td>23.234.114.127</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Boston, MA</td>
+                            <td>us-bos-wg-001</td>
+                            <td class="latency medium">391ms</td>
+                            <td>43.225.189.131</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Washington DC</td>
+                            <td>us-was-wg-001</td>
+                            <td class="latency medium">396ms</td>
+                            <td>185.213.193.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-ovpn-502</td>
+                            <td class="latency medium">401ms</td>
+                            <td>146.70.166.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Salt Lake City, UT</td>
+                            <td>us-slc-wg-301</td>
+                            <td class="latency medium">403ms</td>
+                            <td>23.234.112.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Boston, MA</td>
+                            <td>us-bos-wg-102</td>
+                            <td class="latency medium">407ms</td>
+                            <td>149.40.50.112</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-604</td>
+                            <td class="latency medium">417ms</td>
+                            <td>146.70.171.66</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Raleigh, NC</td>
+                            <td>us-rag-wg-201</td>
+                            <td class="latency medium">419ms</td>
+                            <td>23.234.76.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Atlanta, GA</td>
+                            <td>us-atl-wg-306</td>
+                            <td class="latency medium">423ms</td>
+                            <td>67.213.209.121</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-wg-003</td>
+                            <td class="latency medium">431ms</td>
+                            <td>198.54.135.98</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Raleigh, NC</td>
+                            <td>us-rag-wg-203</td>
+                            <td class="latency medium">440ms</td>
+                            <td>23.234.77.2</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">New York, NY</td>
+                            <td>us-nyc-wg-807</td>
+                            <td class="latency medium">451ms</td>
+                            <td>23.234.103.3</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Ashburn, VA</td>
+                            <td>us-qas-ovpn-101</td>
+                            <td class="latency medium">455ms</td>
+                            <td>185.156.46.169</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Miami, FL</td>
+                            <td>us-mia-wg-003</td>
+                            <td class="latency medium">468ms</td>
+                            <td>45.134.142.193</td>
+                        </tr>
+                    
+                        <tr>
+                            <td class="country">USA</td>
+                            <td class="city">Seattle, WA</td>
+                            <td>us-sea-wg-002</td>
+                            <td class="latency medium">487ms</td>
+                            <td>138.199.43.78</td>
+                        </tr>
+                    
+            </tbody>
+        </table>
+
+        <div class="timestamp">
+            报告生成时间: 2025/12/3 23:12:06
+        </div>
+    </div>
+
+    <script>
+        let sortDirection = {
+            latency: 'asc',
+            country: 'asc',
+            city: 'asc'
+        };
+
+        function sortTable(column) {
+            const table = document.getElementById('resultsTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            rows.sort((a, b) => {
+                let aVal, bVal;
+
+                if (column === 'latency') {
+                    const aText = a.cells[3].textContent;
+                    const bText = b.cells[3].textContent;
+
+                    // 超时的节点排在最后
+                    if (aText === '超时' && bText !== '超时') return 1;
+                    if (aText !== '超时' && bText === '超时') return -1;
+                    if (aText === '超时' && bText === '超时') return 0;
+
+                    aVal = parseFloat(aText);
+                    bVal = parseFloat(bText);
+                } else if (column === 'country') {
+                    aVal = a.cells[0].textContent.toLowerCase();
+                    bVal = b.cells[0].textContent.toLowerCase();
+                } else if (column === 'city') {
+                    aVal = a.cells[1].textContent.toLowerCase();
+                    bVal = b.cells[1].textContent.toLowerCase();
+                }
+
+                if (sortDirection[column] === 'asc') {
+                    return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+                } else {
+                    return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+                }
+            });
+
+            // 切换排序方向
+            sortDirection[column] = sortDirection[column] === 'asc' ? 'desc' : 'asc';
+
+            // 重新添加排序后的行
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // 默认按延迟排序
+        window.onload = function() {
+            sortTable('latency');
+        };
+    </script>
+</body>
+</html>
