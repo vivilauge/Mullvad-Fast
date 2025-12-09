@@ -74,45 +74,56 @@ function getOS() {
 }
 
 // 测试服务器延迟
-function testLatency(ip, timeout = 10000) {
+function testLatency(ip, timeout = 2000) {
     try {
         const os = getOS();
         let pingCommand;
         
         // macOS和Linux的ping命令参数不同
         if (os === 'macos') {
-            // macOS: -W参数单位是毫秒，10秒 = 10000毫秒
-            pingCommand = `ping -c 1 -W 10000 ${ip}`;
+            // macOS: -W参数单位是毫秒，2秒 = 2000毫秒
+            pingCommand = `ping -c 1 -W 2000 ${ip}`;
         } else {
             // Linux: -W参数单位是秒
-            pingCommand = `ping -c 1 -W 10 ${ip}`;
+            pingCommand = `ping -c 1 -W 2 ${ip}`;
         }
         
         const output = execSync(pingCommand, { timeout: timeout, encoding: 'utf8' });
 
         // 解析ping输出中的延迟时间
+        let latency = null;
+        
         // 1. 查找类似 "time=12.3 ms" 的模式（Linux某些版本）
         const timeMatch = output.match(/time=([\d.]+)\s*ms/);
         if (timeMatch) {
-            return parseFloat(timeMatch[1]);
+            latency = parseFloat(timeMatch[1]);
         }
 
         // 2. 查找Linux的rtt统计格式: "rtt min/avg/max/mdev = ..."
-        const rttMatch = output.match(/rtt min\/avg\/max\/mdev = ([\d.]+)\/([\d.]+)\/([\d.]+)\/([\d.]+) ms/);
-        if (rttMatch) {
-            return parseFloat(rttMatch[2]); // 使用平均值
+        if (latency === null) {
+            const rttMatch = output.match(/rtt min\/avg\/max\/mdev = ([\d.]+)\/([\d.]+)\/([\d.]+)\/([\d.]+) ms/);
+            if (rttMatch) {
+                latency = parseFloat(rttMatch[2]); // 使用平均值
+            }
         }
 
         // 3. 查找macOS的round-trip统计格式: "round-trip min/avg/max/stddev = ..."
-        const roundTripMatch = output.match(/round-trip min\/avg\/max\/stddev = ([\d.]+)\/([\d.]+)\/([\d.]+)\/([\d.]+) ms/);
-        if (roundTripMatch) {
-            return parseFloat(roundTripMatch[2]); // 使用平均值
+        if (latency === null) {
+            const roundTripMatch = output.match(/round-trip min\/avg\/max\/stddev = ([\d.]+)\/([\d.]+)\/([\d.]+)\/([\d.]+) ms/);
+            if (roundTripMatch) {
+                latency = parseFloat(roundTripMatch[2]); // 使用平均值
+            }
         }
 
-        return null;
+        // 如果延迟大于2000ms，直接返回2000ms
+        if (latency !== null && latency > 2000) {
+            return 2000;
+        }
+
+        return latency;
     } catch (error) {
-        // 如果ping失败或超时，返回-1表示超时
-        return -1;
+        // 如果ping失败或超时（超过2000ms），返回2000ms
+        return 2000;
     }
 }
 
@@ -239,7 +250,7 @@ function generateHTML(displayResults, allResults, countryFilter) {
         <h1>Mullvad VPN 节点速度测试报告</h1>
 
         <div class="threshold-info">
-            10秒超时测试 | 显示所有节点${countryFilter ? ` | 筛选国家: ${countryFilter}` : ''} | 测试时间: ${timestamp}
+            2秒超时测试 | 显示所有节点${countryFilter ? ` | 筛选国家: ${countryFilter}` : ''} | 测试时间: ${timestamp}
         </div>
 
         <div class="stats">
@@ -392,7 +403,7 @@ async function main() {
     if (countryFilter) {
         console.log(`筛选国家: ${countryFilter}`);
     }
-    console.log(`10秒超时测试`);
+    console.log(`2秒超时测试`);
 
     try {
         let servers = await getMullvadServers();
